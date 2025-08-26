@@ -52,57 +52,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Particles.js configuration
-particlesJS('particles-js', {
-    particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: '#5865F2' },
-        shape: { type: 'circle' },
-        opacity: { 
-            value: 0.5, 
-            random: true, 
-            anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } 
+// Particles.js configuration with mobile optimization
+function initParticles() {
+    const isMobile = window.innerWidth <= 768;
+    
+    particlesJS('particles-js', {
+        particles: {
+            number: { 
+                value: isMobile ? 40 : 80, 
+                density: { enable: true, value_area: isMobile ? 400 : 800 } 
+            },
+            color: { value: '#5865F2' },
+            shape: { type: 'circle' },
+            opacity: { 
+                value: 0.5, 
+                random: true, 
+                anim: { enable: !isMobile, speed: 1, opacity_min: 0.1, sync: false } 
+            },
+            size: { 
+                value: isMobile ? 2 : 3, 
+                random: true, 
+                anim: { enable: !isMobile, speed: 2, size_min: 0.1, sync: false } 
+            },
+            line_linked: {
+                enable: !isMobile,
+                distance: isMobile ? 100 : 150,
+                color: '#5865F2',
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: isMobile ? 1 : 2,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false,
+                attract: { enable: false, rotateX: 600, rotateY: 1200 }
+            }
         },
-        size: { 
-            value: 3, 
-            random: true, 
-            anim: { enable: true, speed: 2, size_min: 0.1, sync: false } 
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: { enable: !isMobile, mode: 'repulse' },
+                onclick: { enable: !isMobile, mode: 'push' },
+                resize: true
+            },
+            modes: {
+                grab: { distance: 400, line_linked: { opacity: 1 } },
+                bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
+                repulse: { distance: 200, duration: 0.4 },
+                push: { particles_nb: 4 },
+                remove: { particles_nb: 2 }
+            }
         },
-        line_linked: {
-            enable: true,
-            distance: 150,
-            color: '#5865F2',
-            opacity: 0.4,
-            width: 1
-        },
-        move: {
-            enable: true,
-            speed: 2,
-            direction: 'none',
-            random: false,
-            straight: false,
-            out_mode: 'out',
-            bounce: false,
-            attract: { enable: false, rotateX: 600, rotateY: 1200 }
-        }
-    },
-    interactivity: {
-        detect_on: 'canvas',
-        events: {
-            onhover: { enable: true, mode: 'repulse' },
-            onclick: { enable: true, mode: 'push' },
-            resize: true
-        },
-        modes: {
-            grab: { distance: 400, line_linked: { opacity: 1 } },
-            bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
-            repulse: { distance: 200, duration: 0.4 },
-            push: { particles_nb: 4 },
-            remove: { particles_nb: 2 }
-        }
-    },
-    retina_detect: true
-});
+        retina_detect: true
+    });
+}
 
 // Counter animation
 function animateCounters() {
@@ -197,6 +204,9 @@ async function fetchMemberCount() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize particles
+    initParticles();
+    
     // Animate counters on load
     setTimeout(animateCounters, 1000);
     
